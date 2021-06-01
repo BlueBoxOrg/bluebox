@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+	<title>BlueBox | RE & Game Hacking</title>
+</head>
+<body>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@1,500&display=swap');
+</style>
+<div class="stars"></div>
+<div class="clouds">
+	<nav class="navbar navbar-expand-lg navbar-dark" style="font-family: 'Calibri Light'; font-size: 17px;">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="../index.html">BlueBox</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">]
+					<span class="navbar-toggler-icon"></span>
+				</button>
+			</div>
+			<div class="collapse navbar-collapse" id="nav">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="../index.html">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="../articles.html">All articles</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4" style="float:none;margin: auto;">
+				<h6 class="article-title">Unpacking PyArmor with CPython</h6>
+				<br>
+				<br>
+			</div>
+			<h6 class="stan"> Some people think that PyArmor is the obfuscator gold standard for python, but you can easly mess with CPython API, here is what we gonna see it this little article. </h6>
+			<br>
+			<br>
+			<div class="col-md-4" style="float:none;margin: auto;">
+				<h6 class="article-title">The Genesis - Injecting Python Code</h6>
+				<br>
+				<br>
+			</div>
+			<h6 class="stan">The fondation of unpacking PyArmor is injecting python code, he can be easly done with CPython API combined with DLL Injection, for starting you will create a new <a class="ano" href="https://docs.microsoft.com/en-us/cpp/build/dlls-in-visual-cpp?view=msvc-160">dll project</a> in visual studio.</h6>
+			<br>
+			<br>
+			<br>
+			<h6 class="stan">Once you have your project ready it's time to import some CPython libs, simply go in Properties,VC++ Directory,Include Directory add CPython Include, and in Lib Directory add CPython libs.</h6>
+			<br>
+			<br>
+			<center><img src="../images/python1.png" style="width: 700px;"></center>
+			<br>
+			<br>
+			<h6 class="stan">If you successfully included CPython into your project you should have no problem including <code>Python.h</code>.</h6>
+			<br>
+			<br>
+			<h6 class="stan">So there here is a simple code for testing CPython Injection, we will use <code>PyRun_SimpleString</code> function.</h6>
+			<code><pre>
+DWORD WINAPI MainThread(HMODULE hModule)
+{
+    Py_SetProgramName(L"pyinject");
+    PyEval_InitThreads(); // in newest version of python is not really necessary
+    PyGILState_STATE s = PyGILState_Ensure(); /* Ensure that the current thread is ready to call the Python
+C API, regardless of the current state of Python, or of its
+thread lock.*/
+    PyRun_SimpleString("print('Injected !')");
+    PyGILState_Release(s);
+    CloseHandle(hModule);
+    FreeLibraryAndExitThread(hModule, 0);
+    return 0;
+}
+			</pre></code>
+			<br>
+			<br>
+			<br>
+			<h6 class="stan">Now you can hit compile and test this out, i have created a little script wich print "Waiting for inject..." everytime i hit any key</h6>
+			<code><pre>
+while True:
+	print("Waiting for inject...")
+	input()</pre></code>
+	<br>
+	<br>
+			<h6 class="stan">So if we inject the dll into <code>python.exe</code> we should get "Injected !" message</h6>
+			<br>
+			<br>
+			<center><img src="../images/python2.png"></center>
+			<br>
+			<br>
+			<h6 class="stan">Now that we know the CPython api is working let's unpack pyarmor !</h6>
+			<br>
+			<br>
+			<div class="col-md-3" style="float:none;margin:auto;">
+				<h6 class="article-title">The Actual unpacking part</h6>
+			</div>
+				<br>
+				<br>
+				<h6 class="stan">When you can inject python code into any python script it become really easy to unpack or crack any type of python program, i have created a simple python script wich looks like that</h6>
+				<code><pre>
+def auth():
+	return False
+
+while True:
+	input("user> ")
+	if(auth()):
+		print("Welcome Admin !")
+	else:
+		print("You are not authorized.")
+				</pre></code>
+				<h6 class="stan">The goal is to unpack the auth function this can be easly do with <a class="ano" href="https://docs.python.org/3/library/dis.html">dis</a> lib.</h6>
+				<br>
+				<br>
+				<h6 class="stan">Here is the result</h6>
+				<center><img src="../images/python3.png"></center>
+				<br>
+				<br>
+				<h6 class="stan">As you can see this is a huge mess just for a <code>return False</code> function, why ?</h6>
+				<br>
+				<br>
+				<h6 class="stan">This is the downside of this method, pyarmor encrypt all functions,bytecodes,etc.. and only decrypt them at runtime when the function is used.</h6>
+				<br>
+				<br>
+				<h6 class="stan">But ! You can still replace the function or call it, and that's pretty interesting if your plan is to crack a python program.</h6>
+				<br>
+				<br>
+				<div class="col-md-2" style="float:none;margin:auto;">
+					<h6 class="article-title">End</h6>
+				</div>
+				<br>
+				<br>
+				<h6 class="stan">As you can see is not an easy task to unpack/crack a python script protected with PyArmor but with some works you can get it !</h6>
+				<br>
+				<br>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</div>
+</body>
+</html>
