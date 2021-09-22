@@ -15,84 +15,84 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@1,500&display=swap');
 </style>
 <div class="stars"></div>
-<div class="clouds">
-	<nav class="navbar navbar-expand-lg navbar-dark" style="font-family: 'Calibri Light'; font-size: 17px;">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="../index.html">BlueBox</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">]
-					<span class="navbar-toggler-icon"></span>
-				</button>
-			</div>
-			<div class="collapse navbar-collapse" id="nav">
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item">
-						<a class="nav-link" href="../index.html">Home</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="../articles.html">All articles</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+<nav class="navbar navbar-expand-lg navbar-dark" style="font-family: 'Calibri Light'; font-size: 17px;">
 	<div class="container">
-		<div class="row">
-			<div class="col-md-4" style="float:none;margin: auto;">
-				<h6 class="article-title">Bypassing EQU8 from user-mode</h6>
-				<br>
-				<br>
-			</div>
-			<h6 class="stan">EQU8 is a relatively new kernel anticheat used on several games, developed by a company named Int3 Software that has been around since 2016.</h6>
-			<br>
-			<br>
-			<h6 class="stan">I have already did a bypass for a game called Diabotical with this anticheat, you can find the bypass on my <a class="ano" href="https://github.com/call-042PE/Equ8-Usermode-Bypass">github</a>, but this time i wanted to do a usermode bypass on their most popular protected game, Totally Accurate Battlegrounds.</h6>
-			<br>
-			<br>
-			<h6 class="stan">At start i wanted to hijack a legit dll that is legitly load by the game and replace it by my cheat, my target was <code>InControlNative.dll</code> the first attempt was not really good the dll loaded successfully but, the player cannot move.</h6>
-			<br>
-			<br>
-			<h6 class="stan">Why ? because this dll serve to keyboard input, so i found another great idea to counter this, loading the original dll, grabbing export address and making fake export function in my cheat with the same name as the original dll and "redirecting" the call on the original dll.</h6>
-			<br>
-			<br>
-			<br>
-			<center><img src="../images/equ8-schema.png" style="width: 600px;"></center>
-			<br>
-			<br>
-			<h6 class="stan">This method worked perfectly well, i could move the player normally and injecting my cheat but there is a catch, EQU8 as a protection for protecting game resources.</h6>
-			<br>
-			<br>
-			<h6 class="stan">EQU8 as a file called <code>equ8.db</code> this file is a digitally signed catalog over protected files, so if you change a protected files you will have an anticheat error when your gonna join an online game.</h6>
-			<br>
-			<br>
-			<h6 class="stan">Yeah i could find where the verification was made and patching it, but i didn't because this shit is time consuming and debugging unity game are pain in the ass.</h6>
-			<div class="col-md-2" style="float:none;margin: auto;">
-				<h6 class="article-title">Abusing lsass.exe</h6>
-				<br>
-				<br>
-			</div>
-			<h6 class="stan">Why patching and do all the reversing shit when you can just abuse lsass privilege ?</h6>
-			<br>
-			<br>
-			<h6 class="stan">After my little failure with the first method i checked all the handle opened to <code>TotallyAccurateBattlegrounds.exe</code> with ProcessHacker, and i saw that <code>csrss.exe</code> and <code>lsass.exe</code> have opened handle to <code>TotallyAccurateBattlegrounds.exe</code> with PROCESS_VM_OPERATION Access.</h6>
-			<br>
-			<br>
-			<h6 class="stan">So i've had a little idea why not injecting a dll into <code>lsass.exe</code>, hijacking the handle and injecting the cheat into <code>TotallyAccurateBattlegrounds.exe</code>.</h6>
-			<br>
-			<br>
-			<h6 class="stan">So i wrote a little piece a code for "bruteforcing" all handles and checking with <code>GetProcessId()</code> and, it sucessfully worked, i can get the handle but i was not sure if this handle was enough privileged for injecting a dll so i tested something.</h6>
-			<br>
-			<br>
-			<h6 class="stan">I tried to just open an handle with <code>OpenProcess()</code> with PROCESS_ALL_ACCESS and tried to see if the handle was opened with all access with ProcessHacker and it was :)</h6>
-			<br>
-			<br>
-			<h6 class="stan">So now that i have all the power on <code>TotallyAccurateBattlegrounds.exe</code> i can inject my cheat very easly, that was not really hard to do an simple LoadLibrary injector as a POC.</h6>
-			<br>
-			<br>
-			<h6 class="stan">You can find the code of the injector on the <a href="https://github.com/BlueBoxOrg/EQU8-Injector" class="ano">BlueBox github.</a></h6>
-			<br>
-			<center><iframe width="500" height="400" src="https://www.youtube.com/embed/ctZuRe0hgsU"></iframe></center>
+		<div class="navbar-header">
+			<a class="navbar-brand" href="../index.html">BlueBox</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">]
+				<span class="navbar-toggler-icon"></span>
+			</button>
 		</div>
+		<div class="collapse navbar-collapse" id="nav">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="../index.html">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="../articles.html">All articles</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<div class="container">
+	<div class="row">
+		<div class="col-md-4" style="float:none;margin: auto;">
+			<h6 class="article-title">Bypassing EQU8 from user-mode</h6>
+			<br>
+			<br>
+		</div>
+		<h6 class="stan">EQU8 is a relatively new kernel anticheat used on several games, developed by a company named Int3 Software that has been around since 2016.</h6>
+		<br>
+		<br>
+		<h6 class="stan">I have already did a bypass for a game called Diabotical with this anticheat, you can find the bypass on my <a class="ano" href="https://github.com/call-042PE/Equ8-Usermode-Bypass">github</a>, but this time i wanted to do a usermode bypass on their most popular protected game, Totally Accurate Battlegrounds.</h6>
+		<br>
+		<br>
+		<h6 class="stan">At start i wanted to hijack a legit dll that is legitly load by the game and replace it by my cheat, my target was <code>InControlNative.dll</code> the first attempt was not really good the dll loaded successfully but, the player cannot move.</h6>
+		<br>
+		<br>
+		<h6 class="stan">Why ? because this dll serve to keyboard input, so i found another great idea to counter this, loading the original dll, grabbing export address and making fake export function in my cheat with the same name as the original dll and "redirecting" the call on the original dll.</h6>
+		<br>
+		<br>
+		<br>
+		<center><img src="../images/equ8-schema.png" style="width: 600px;"></center>
+		<br>
+		<br>
+		<h6 class="stan">This method worked perfectly well, i could move the player normally and injecting my cheat but there is a catch, EQU8 as a protection for protecting game resources.</h6>
+		<br>
+		<br>
+		<h6 class="stan">EQU8 as a file called <code>equ8.db</code> this file is a digitally signed catalog over protected files, so if you change a protected files you will have an anticheat error when your gonna join an online game.</h6>
+		<br>
+		<br>
+		<h6 class="stan">Yeah i could find where the verification was made and patching it, but i didn't because this shit is time consuming and debugging unity game are pain in the ass.</h6>
+		<div class="col-md-2" style="float:none;margin: auto;">
+			<h6 class="article-title">Abusing lsass.exe</h6>
+			<br>
+			<br>
+		</div>
+		<h6 class="stan">Why patching and do all the reversing shit when you can just abuse lsass privilege ?</h6>
+		<br>
+		<br>
+		<h6 class="stan">After my little failure with the first method i checked all the handle opened to <code>TotallyAccurateBattlegrounds.exe</code> with ProcessHacker, and i saw that <code>csrss.exe</code> and <code>lsass.exe</code> have opened handle to <code>TotallyAccurateBattlegrounds.exe</code> with PROCESS_VM_OPERATION Access.</h6>
+		<br>
+		<br>
+		<h6 class="stan">So i've had a little idea why not injecting a dll into <code>lsass.exe</code>, hijacking the handle and injecting the cheat into <code>TotallyAccurateBattlegrounds.exe</code>.</h6>
+		<br>
+		<br>
+		<h6 class="stan">So i wrote a little piece a code for "bruteforcing" all handles and checking with <code>GetProcessId()</code> and, it sucessfully worked, i can get the handle but i was not sure if this handle was enough privileged for injecting a dll so i tested something.</h6>
+		<br>
+		<br>
+		<h6 class="stan">I tried to just open an handle with <code>OpenProcess()</code> with PROCESS_ALL_ACCESS and tried to see if the handle was opened with all access with ProcessHacker and it was :)</h6>
+		<br>
+		<br>
+		<h6 class="stan">So now that i have all the power on <code>TotallyAccurateBattlegrounds.exe</code> i can inject my cheat very easly, that was not really hard to do an simple LoadLibrary injector as a POC.</h6>
+		<br>
+		<br>
+		<h6 class="stan">You can find the code of the injector on the <a href="https://github.com/BlueBoxOrg/EQU8-Injector" class="ano">BlueBox github.</a></h6>
+		<br>
+		<br>
+		<h6 class="stan">Now you have all the keys to make your own l33t cheat for TABG in usermode.</h6>
+		<center><iframe width="500" height="400" src="https://www.youtube.com/embed/ctZuRe0hgsU"></iframe></center>
 	</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
